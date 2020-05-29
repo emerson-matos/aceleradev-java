@@ -1,6 +1,12 @@
 # Compiled class file
 *.class
 
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+
 # Log file
 *.log
 
