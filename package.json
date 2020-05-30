@@ -1,0 +1,12 @@
+{
+  "name": "aceleradev-java",
+  "version": "0.0.1",
+  "description": "Codenation reposotory",
+  "author": "Emerson Almeida Matos <@emerson-matos>",
+  "scripts": {
+    "version": "standard-version"
+  },
+  "devDependencies": {
+    "standard-version": "^5.0.2"
+  }
+}
