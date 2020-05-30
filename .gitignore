@@ -2,10 +2,10 @@
 *.class
 
 # Ignore Gradle project-specific cache directory
-.gradle
+**/.gradle
 
 # Ignore Gradle build output directory
-build
+**/build
 
 # Log file
 *.log
@@ -14,7 +14,7 @@ build
 *.ctxt
 
 # Mobile Tools for Java (J2ME)
-.mtj.tmp/
+**/.mtj.tmp/
 
 # Package Files #
 *.jar
@@ -49,14 +49,14 @@ HELP.md
 *.iws
 *.iml
 *.ipr
-out/
+**/out/
 
 ### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+**/nbproject/private/
+**/nbbuild/
+**/dist/
+**/nbdist/
+**/.nb-gradle/
 
 ### VS Code ###
-.vscode/
+**/.vscode/
