@@ -1,0 +1,33 @@
+plugins {
+	id 'com.github.johnrengelman.shadow' version '4.0.4'
+	id 'java'
+	id 'application'
+}
+
+mainClassName = 'br.com.emerson.cesar.CifraDeCesarApplication'
+group = 'br.com.emerson'
+version = '0.0.1-SNAPSHOT'
+
+sourceCompatibility = '1.8'
+
+sourceSets {
+	main.java.srcDir "src/main/java"
+	main.resources.srcDir "src/main/resources"
+}
+
+jar {
+	manifest {
+		attributes 'Main-Class':'br.com.emerson.cesar.CifraDeCesarApplication'
+	}
+}
+
+
+repositories {
+	mavenCentral()
+	jcenter()
+}
+
+dependencies {
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
+  	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
+}
