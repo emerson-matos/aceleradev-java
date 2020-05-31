@@ -2,10 +2,7 @@ package br.com.emerson.cesar;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 public final class Utils {
 
     private static final Logger LOGGER = LogManager.getLogger(Utils.class);
+    private static String filePath;
 
     private Utils() {
 
@@ -71,9 +69,7 @@ public final class Utils {
     }
 
     public static void writeToFile(String name, String json) {
-        String filePath = System.getProperty("user.dir")+ File.separator + name + ".json";
-        File myObj;
-        StringBuilder result;
+        filePath = System.getProperty("user.dir") + File.separator + name + ".json";
         LOGGER.info("Criando arquivo {}", filePath);
         try (BufferedWriter file = new BufferedWriter(new FileWriter(filePath))) {
             file.write(json);
@@ -81,16 +77,20 @@ public final class Utils {
         } catch (IOException e) {
             LOGGER.error(e);
         }
-        result = new StringBuilder();
-        myObj = new File(filePath);
+    }
+
+    public static String getFileContenString() {
+        File myObj = new File(filePath);
+        StringBuilder result = new StringBuilder();
         try (Scanner myReader = new Scanner(myObj)) {
             while (myReader.hasNextLine()) {
-              String data = myReader.nextLine();
-              result.append(data);
+                String data = myReader.nextLine();
+                result.append(data);
             }
         } catch (Exception e) {
             LOGGER.error(e);
         }
         LOGGER.info("File content: {}", result);
+        return result.toString();
     }
 }
