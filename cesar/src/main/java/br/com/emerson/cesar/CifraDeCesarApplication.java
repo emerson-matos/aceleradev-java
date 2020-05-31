@@ -1,10 +1,6 @@
 package br.com.emerson.cesar;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.HashMap;
@@ -25,10 +21,18 @@ public class CifraDeCesarApplication {
 		LOGGER.info("Iniciando aplicação");
 		try {
 			connect();
+			decifra();
 		} catch (IOException e) {
 			LOGGER.error("Erro {}", e);
 		}
 		LOGGER.info("Encerrando aplicação");
+	}
+
+	private static void decifra() {
+		String content = Utils.getFileContenString();
+		Request obj = Mapper.parseToObject(content, Request.class);
+		String decifrado = Decifrador.decode(obj.getDeslocamento(), obj.getCifrado());
+		obj.setDecifrado(decifrado);
 	}
 
 	public static void connect() throws IOException {
