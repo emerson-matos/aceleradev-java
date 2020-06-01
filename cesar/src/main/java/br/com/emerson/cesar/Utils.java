@@ -69,7 +69,7 @@ public final class Utils {
     }
 
     public static void writeToFile(String name, String json) {
-        filePath = System.getProperty("user.dir") + File.separator + name + ".json";
+        filePath = getFileName(name);
         LOGGER.info("Criando arquivo {}", filePath);
         try (BufferedWriter file = new BufferedWriter(new FileWriter(filePath))) {
             file.write(json);
@@ -77,6 +77,10 @@ public final class Utils {
         } catch (IOException e) {
             LOGGER.error(e);
         }
+    }
+
+    public static String getFileName(String name) {
+        return System.getProperty("user.dir") + File.separator + name + ".json";
     }
 
     public static String getFileContenString() {
