@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -31,9 +32,9 @@ public final class Utils {
         LOGGER.info("Gerando query parameters");
         result.append("?");
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+            result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.name()));
             result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            result.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.name()));
             result.append("&");
         }
 
@@ -74,6 +75,7 @@ public final class Utils {
         try (BufferedWriter file = new BufferedWriter(new FileWriter(filePath))) {
             file.write(json);
             file.flush();
+            LOGGER.info("Arquivo salvo no local {}", filePath);
         } catch (IOException e) {
             LOGGER.error(e);
         }
