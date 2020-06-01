@@ -13,26 +13,37 @@ import org.apache.logging.log4j.Logger;
 
 public class CifraDeCesarApplication {
 
+	private static final String NOME_ARQUIVO = "jsonCifra";
+
 	private static final Logger LOGGER = LogManager.getLogger(CifraDeCesarApplication.class);
 
 	private static final String TOKEN_VALUE = System.getenv("TOKEN");
 
 	public static void main(String[] args) {
 		LOGGER.info("Iniciando aplicação");
+		Request obj = null;
 		try {
 			connect();
-			decifra();
+			obj = decifra();
+			criaResumo(obj);
 		} catch (IOException e) {
 			LOGGER.error("Erro {}", e);
 		}
 		LOGGER.info("Encerrando aplicação");
 	}
 
-	private static void decifra() {
+	private static Request decifra() {
 		String content = Utils.getFileContenString();
 		Request obj = Mapper.parseToObject(content, Request.class);
 		String decifrado = Decifrador.decode(obj.getDeslocamento(), obj.getCifrado());
 		obj.setDecifrado(decifrado);
+		return obj;
+	}
+
+	private static void criaResumo(Request obj) {
+		String resumo = Decifrador.gerarResumo(obj.getDecifrado());
+		obj.setResumoCriptografado(resumo);
+		Mapper.writeValue(Utils.getFileName(NOME_ARQUIVO), obj);
 	}
 
 	public static void connect() throws IOException {
@@ -58,7 +69,7 @@ public class CifraDeCesarApplication {
 		status = con.getResponseCode();
 		streamReader = Utils.getResultByStatus(status, con);
 		content = Utils.getContent(streamReader);
-		Utils.writeToFile("jsonCifra", content);
+		Utils.writeToFile(NOME_ARQUIVO, content);
 
 		con.disconnect();
 		LOGGER.info("Arquivo salvo, conexão finalizada");

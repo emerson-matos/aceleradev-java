@@ -1,5 +1,7 @@
 package br.com.emerson.cesar;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +31,21 @@ public class Decifrador {
         LOGGER.info("fim do decode");
         LOGGER.info("Resultado do decode: {}", decifrado);
         return decifrado.toString();
+    }
+
+    public static String gerarResumo(String value) {
+        String sha1 = "";
+        LOGGER.info("Gerando resumo da mensagem: {}", value);
+        try {
+			MessageDigest digest = MessageDigest.getInstance("SHA-1");
+	        digest.reset();
+	        digest.update(value.getBytes("utf8"));
+            sha1 = String.format("%040x", new BigInteger(1, digest.digest()));
+            LOGGER.info("Resumo gerado: {}", sha1);
+		} catch (Exception e){
+			LOGGER.error("Erro ao gerar resumo usando SHA, {}", e);
+        }
+        return sha1;
     }
 
     private static void trataCaractere(StringBuilder texto, Integer pos, Integer deslocamento) {
