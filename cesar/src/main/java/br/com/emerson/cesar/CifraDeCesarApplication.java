@@ -1,23 +1,21 @@
 package br.com.emerson.cesar;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class CifraDeCesarApplication {
 
-	private static final String NOME_ARQUIVO = "jsonCifra";
-
 	private static final Logger LOGGER = LogManager.getLogger(CifraDeCesarApplication.class);
 
+	private static final String NOME_ARQUIVO = "jsonCifra";
+
+	private static final String TOKEN_KEY = "token";
 	private static final String TOKEN_VALUE = System.getenv("TOKEN");
+	private static final String RECURSO_SUBMIT = "submit-solution";
+	private static final String RECURSO_GERAR = "generate-data";
+	private static final String URL = "https://api.codenation.dev/v1/challenge/dev-ps/";
 
 	public static void main(String[] args) {
 		LOGGER.info("Iniciando aplicação");
@@ -26,10 +24,19 @@ public class CifraDeCesarApplication {
 			connect();
 			obj = decifra();
 			criaResumo(obj);
+			submit();
 		} catch (IOException e) {
 			LOGGER.error("Erro {}", e);
 		}
 		LOGGER.info("Encerrando aplicação");
+	}
+
+	private static void submit() throws IOException {
+		Conexao conexao = new Conexao();
+		adicionaToken(conexao);
+		conexao.configuraConexaoPOST(URL + RECURSO_SUBMIT);
+		conexao.setContentType("multipart/form-data");
+		conexao.doPost();
 	}
 
 	private static Request decifra() {
@@ -47,31 +54,15 @@ public class CifraDeCesarApplication {
 	}
 
 	public static void connect() throws IOException {
-		Map<String, String> parameters = new HashMap<>();
-		int status = -1;
-		URL url = null;
-		HttpsURLConnection con = null;
-		Reader streamReader = null;
-		String content = null;
-		LOGGER.info("Iniciando configuração da conexão");
-		parameters.put("token", TOKEN_VALUE);
-		url = new URL("https://api.codenation.dev/v1/challenge/dev-ps/generate-data" + Utils.getParamsString(parameters));
-		
-		con = (HttpsURLConnection) url.openConnection();
-		con.setRequestMethod("GET");
-		LOGGER.info("Configuração da conexão finalizada");
-		con.setDoOutput(true);
-		LOGGER.info("Connect URL {}", con.getURL());
-		
-		LOGGER.info("Iniciando conexão");
-		con.connect();
+		Conexao conexao = new Conexao();
+		adicionaToken(conexao);
+		conexao.configuraConexaoGET(URL + RECURSO_GERAR);
+		conexao.doGet();
+		conexao.salvaResultado(NOME_ARQUIVO);
+		conexao.fim();
+	}
 
-		status = con.getResponseCode();
-		streamReader = Utils.getResultByStatus(status, con);
-		content = Utils.getContent(streamReader);
-		Utils.writeToFile(NOME_ARQUIVO, content);
-
-		con.disconnect();
-		LOGGER.info("Arquivo salvo, conexão finalizada");
+	private static void adicionaToken(Conexao conexao) {
+		conexao.adicionaParametro(TOKEN_KEY, TOKEN_VALUE);
 	}
 }
