@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/emerson-matos/aceleradev-java/compare/v0.0.3...v0.0.4) (2020-06-01)
+
+
+### Features
+
+* gerando resumo de texto decifrado ([8ce09ff](https://github.com/emerson-matos/aceleradev-java/commit/8ce09ff5d3b6fd5f62a9a8b7d3797ec9fb21b4b4))
+
 ### [0.0.3](https://github.com/emerson-matos/aceleradev-java/compare/v0.0.2...v0.0.3) (2020-05-31)
 
 
