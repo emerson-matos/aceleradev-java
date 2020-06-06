@@ -29,6 +29,7 @@ repositories {
 
 dependencies {
 	implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
-  	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
+	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.12.0'
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
 }

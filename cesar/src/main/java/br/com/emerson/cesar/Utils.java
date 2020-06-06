@@ -1,21 +1,11 @@
 package br.com.emerson.cesar;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Map;
-import java.util.Scanner;
-
-import javax.net.ssl.HttpsURLConnection;
-
+import okhttp3.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.*;
+import java.util.Scanner;
 
 public final class Utils {
 
@@ -24,22 +14,6 @@ public final class Utils {
 
     private Utils() {
 
-    }
-
-    public static String getParamsString(final Map<String, String> params) throws UnsupportedEncodingException {
-        final StringBuilder result = new StringBuilder();
-        LOGGER.info("Gerando query parameters");
-        result.append("?");
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-            result.append("&");
-        }
-
-        final String resultString = result.toString();
-        LOGGER.info("Query parameters gerados: {}", resultString);
-        return resultString.length() > 0 ? resultString.substring(0, resultString.length() - 1) : resultString;
     }
 
     public static String getContent(Reader streamReader) throws IOException {
@@ -55,14 +29,15 @@ public final class Utils {
         return content.toString();
     }
 
-    public static Reader getResultByStatus(int status, HttpsURLConnection con) throws IOException {
+    public static Reader getResultByStatus(Response res) throws IOException {
         InputStreamReader streamReader;
+        int status = res.code();
         LOGGER.info("Response status code: {}", status);
         if (status > 299) {
-            streamReader = new InputStreamReader(con.getErrorStream());
+            streamReader = new InputStreamReader(res.body().byteStream());
             LOGGER.warn("Algo de errado ocorreu ao recuperar a resposta");
         } else {
-            streamReader = new InputStreamReader(con.getInputStream());
+            streamReader = new InputStreamReader(res.body().byteStream());
             LOGGER.info("Sucesso ao recuperar a resposta");
         }
         return streamReader;
@@ -74,8 +49,9 @@ public final class Utils {
         try (BufferedWriter file = new BufferedWriter(new FileWriter(filePath))) {
             file.write(json);
             file.flush();
+            LOGGER.info("Arquivo salvo no local {}", filePath);
         } catch (IOException e) {
-            LOGGER.error(e);
+            LOGGER.error("Erro ao salvar arquivo {}", e);
         }
     }
 
