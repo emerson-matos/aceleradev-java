@@ -1,16 +1,16 @@
 package br.com.emerson.cesar;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-
+import br.com.emerson.cesar.dto.RequestDTO;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class Mapper {
     private static final Logger LOGGER = LogManager.getLogger(Mapper.class);
@@ -43,7 +43,7 @@ public class Mapper {
         return obj;
     }
 
-    public static void writeValue(String file, Request obj) {
+    public static void writeValue(String file, RequestDTO obj) {
         try {
             LOGGER.info("Iniciando escrita do objeto {} no local {}", obj, file);
             OBJECT_MAPPER.writeValue(new FileOutputStream(file), obj);

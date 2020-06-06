@@ -1,9 +1,13 @@
 package br.com.emerson.cesar;
 
-import java.io.IOException;
-
+import br.com.emerson.cesar.dto.RequestDTO;
+import br.com.emerson.cesar.request.Connect;
+import okhttp3.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.io.Reader;
 
 public class CifraDeCesarApplication {
 
@@ -11,15 +15,12 @@ public class CifraDeCesarApplication {
 
 	private static final String NOME_ARQUIVO = "jsonCifra";
 
-	private static final String TOKEN_KEY = "token";
-	private static final String TOKEN_VALUE = System.getenv("TOKEN");
 	private static final String RECURSO_SUBMIT = "submit-solution";
 	private static final String RECURSO_GERAR = "generate-data";
-	private static final String URL = "https://api.codenation.dev/v1/challenge/dev-ps/";
 
 	public static void main(String[] args) {
 		LOGGER.info("Iniciando aplicação");
-		Request obj = null;
+        RequestDTO obj;
 		try {
 			connect();
 			obj = decifra();
@@ -32,37 +33,29 @@ public class CifraDeCesarApplication {
 	}
 
 	private static void submit() throws IOException {
-		Conexao conexao = new Conexao();
-		adicionaToken(conexao);
-		conexao.configuraConexaoPOST(URL + RECURSO_SUBMIT);
-		conexao.setContentType("multipart/form-data");
-		conexao.doPost();
-	}
+        Connect con = new Connect();
+        con.makePost(RECURSO_SUBMIT, Utils.getFileContenString(), null);
+    }
 
-	private static Request decifra() {
+    private static RequestDTO decifra() {
 		String content = Utils.getFileContenString();
-		Request obj = Mapper.parseToObject(content, Request.class);
+        RequestDTO obj = Mapper.parseToObject(content, RequestDTO.class);
 		String decifrado = Decifrador.decode(obj.getDeslocamento(), obj.getCifrado());
 		obj.setDecifrado(decifrado);
 		return obj;
 	}
 
-	private static void criaResumo(Request obj) {
+    private static void criaResumo(RequestDTO obj) {
 		String resumo = Decifrador.gerarResumo(obj.getDecifrado());
 		obj.setResumoCriptografado(resumo);
 		Mapper.writeValue(Utils.getFileName(NOME_ARQUIVO), obj);
 	}
 
-	public static void connect() throws IOException {
-		Conexao conexao = new Conexao();
-		adicionaToken(conexao);
-		conexao.configuraConexaoGET(URL + RECURSO_GERAR);
-		conexao.doGet();
-		conexao.salvaResultado(NOME_ARQUIVO);
-		conexao.fim();
-	}
-
-	private static void adicionaToken(Conexao conexao) {
-		conexao.adicionaParametro(TOKEN_KEY, TOKEN_VALUE);
+    private static void connect() throws IOException {
+        Connect con = new Connect();
+        Response res = con.makeGet(RECURSO_GERAR, null);
+        Reader streamReader = Utils.getResultByStatus(res);
+        String content = Utils.getContent(streamReader);
+        Utils.writeToFile(NOME_ARQUIVO, content);
 	}
 }

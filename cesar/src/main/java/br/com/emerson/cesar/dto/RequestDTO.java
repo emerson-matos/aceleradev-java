@@ -1,8 +1,8 @@
-package br.com.emerson.cesar;
+package br.com.emerson.cesar.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Request {
+public class RequestDTO {
     private String token;
     private String cifrado;
     private String decifrado;
