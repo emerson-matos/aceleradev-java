@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/emerson-matos/aceleradev-java/compare/v0.0.4...v0.0.5) (2020-06-06)
+
+
+### Features
+
+* enviado json resposta ([33e33f0](https://github.com/emerson-matos/aceleradev-java/commit/33e33f02a288c7c12883f0b2b31f5938b78a15b4))
+
 ### [0.0.4](https://github.com/emerson-matos/aceleradev-java/compare/v0.0.3...v0.0.4) (2020-06-01)
 
 
